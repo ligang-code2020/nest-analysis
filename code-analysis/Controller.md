@@ -256,6 +256,7 @@ class CatsController {
 ### 阶段总结：
 在这里你可以找到应用程序初始化的过程
 > 源码位置：packages/core/nest-application.ts
+> 源码位置：packages/core/nest-factory.ts
 
 #### 1. 装饰器与元数据机制
 NestJS 使用了 TypeScript 的装饰器和 reflect-metadata 库来实现依赖注入、AOP（面向切面编程）等功能。
