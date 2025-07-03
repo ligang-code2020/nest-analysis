@@ -1,6 +1,7 @@
 ## Module 模块
 
 模块是一个用 @Module() 装饰器注解的类。该装饰器提供了 Nest 用于高效组织和管理应用结构的元数据。
+> 源码实现位置：packages/common/decorators/modules/module.decorator.ts
 
 ```mermaid
 graph TD
@@ -132,4 +133,29 @@ export class UserModule {}
 ##### 3. 避免在多个模块中重复声明同一个 provider
 * 否则会创建多个实例，破坏单例行为。
 * 容易导致状态不一致、难以调试和维护。
-* 
+
+假设我们有三个模块：
+* `SharedModule`：提供 `LoggerService`, `ConfigService`
+* `DatabaseModule`：提供 `PrismaService`, `TypeORMService`
+* `UserModule`：提供 `UserService`, 使用 `LoggerService`, `PrismaService`
+
+```ts
+@Module({
+  providers: [LoggerService, ConfigService],
+  exports: [LoggerService, ConfigService],
+})
+export class SharedModule {}
+
+@Module({
+  providers: [PrismaService, TypeORMService],
+  exports: [PrismaService],
+})
+export class DatabaseModule {}
+
+@Module({
+  imports: [SharedModule, DatabaseModule], // 自动获取 LoggerService, PrismaService
+  providers: [UserService],
+  controllers: [UserController],
+})
+export class UserModule {}
+```
